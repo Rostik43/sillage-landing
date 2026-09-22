@@ -1,0 +1,9 @@
+.DS_Store
+# старые версии страницы — только локально
+index.*.html
+# в репозиторий идут только файлы, которые использует index.html
+img/*
+!img/spin/
+!img/clips/
+!img/l-*.jpg
+!img/og.jpg
