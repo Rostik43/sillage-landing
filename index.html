@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex, nofollow"><!-- черновик на согласовании: не индексировать -->
 <script>
   /* Прячем элементы под анимацию, только когда JS реально работает.
@@ -114,14 +114,32 @@ button,input{font:inherit;color:inherit}
 .film__progress{position:absolute;z-index:6;left:var(--pad);right:var(--pad);bottom:1.2rem;height:1px;background:rgba(29,27,24,.12)}
 .film__progress i{position:absolute;inset:0;background:var(--ink);transform-origin:left;transform:scaleX(0)}
 .film__hint{position:absolute;z-index:6;left:50%;bottom:2.2rem;transform:translateX(-50%);font-size:.8rem;color:var(--ink-2);opacity:0}
+/* ===== ТЕЛЕФОН: две зоны, которые никогда не пересекаются =====
+   сверху — картинка в квадратном окне, снизу — текст на молочном фоне */
 @media(max-width:760px){
-  /* на телефоне текст лежит поверх прибора — подкладываем молочный градиент */
-  .film__hero,.sub{top:auto;bottom:0;left:0;right:0;transform:none;max-width:none;
-    padding:4.5rem var(--pad) 3.2rem;background:linear-gradient(0deg,var(--bg) 62%,rgba(240,233,222,0))}
+  .film__stage{--top:64px;--media:min(100vw,48svh)}
+  .film__frames,.film__slide{top:var(--top);bottom:auto;height:var(--media)}
+  .film__slide{left:var(--pad);right:var(--pad);border-radius:14px;overflow:hidden}
+  .film__slide::after{display:none}
+  .film__slide[data-focus="left"] img,.film__slide[data-focus="left"] video{object-position:28% 50%}
+  .film__slide[data-focus="right"] img,.film__slide[data-focus="right"] video{object-position:66% 50%}
+  /* текстовая зона начинается под картинкой; снизу запас под панель браузера */
+  .film__text{top:calc(var(--top) + var(--media) + 1.3rem);bottom:auto;transform:none;max-width:none}
+  .film__hero .label{display:none}
+  .film__hero .display{font-size:clamp(2rem,8.6vw,2.5rem);margin:0 0 1.1rem}
   .film__hero .lead{display:none}
-  .sub{font-size:1.9rem}
-  .cap{bottom:3rem}
-  .cap p{display:none}
+  .film__cta{gap:.5rem}
+  .film__cta .btn{padding:.85rem 1.2rem}
+  .sub{font-size:clamp(1.55rem,6.8vw,1.95rem);line-height:1.15}
+  .cap{color:var(--ink)}
+  .cap .label{color:var(--ink-2)}
+  .cap .label::before{background:var(--brass)}
+  .cap h3{font-size:clamp(1.5rem,6.4vw,1.85rem);margin:.5rem 0 .45rem}
+  .cap p{color:var(--ink-2);font-size:.95rem}
+  .film__end{top:50%;transform:translateY(-58%)}
+  .film__progress,.film__hint{display:none}
+  .nav{padding:.7rem var(--pad)}
+  .nav__mark small{display:none}
 }
 /* без анимации: фильм превращается в обычный первый экран + 4 интерьера */
 .no-film .film{height:auto}
@@ -221,7 +239,7 @@ button,input{font:inherit;color:inherit}
 .footer a:hover{color:var(--ink)}
 
 /* ============ ПЛАВАЮЩАЯ КНОПКА ============ */
-.dock{position:fixed;left:50%;bottom:1.2rem;transform:translate(-50%,160%);z-index:80;display:flex;align-items:center;gap:1rem;padding:.45rem .45rem .45rem 1.1rem;background:rgba(248,244,238,.92);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid var(--line);border-radius:12px;transition:transform .5s var(--ease);box-shadow:0 6px 24px rgba(29,27,24,.06);max-width:calc(100vw - 2rem)}
+.dock{position:fixed;left:50%;bottom:calc(1.2rem + env(safe-area-inset-bottom));transform:translate(-50%,160%);z-index:80;display:flex;align-items:center;gap:1rem;padding:.45rem .45rem .45rem 1.1rem;background:rgba(248,244,238,.92);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid var(--line);border-radius:12px;transition:transform .5s var(--ease);box-shadow:0 6px 24px rgba(29,27,24,.06);max-width:calc(100vw - 2rem)}
 .dock.is-on{transform:translate(-50%,0)}
 .dock__txt{font-size:.88rem;color:var(--ink-2);white-space:nowrap}
 @media(max-width:600px){.dock__txt{display:none}.dock{padding:.4rem}}
@@ -267,10 +285,10 @@ button,input{font:inherit;color:inherit}
         <canvas aria-hidden="true"></canvas>
       </div>
 
-      <div class="film__layer film__slide" data-in=".42,.47,.57,.61" data-kb><img src="img/l-salon.jpg" alt="Аромадиффузор SILLAGE на ресепшн салона красоты" loading="lazy" decoding="async"><video data-clip="img/clips/l-salon.mp4" muted loop playsinline preload="none" aria-hidden="true"></video></div>
-      <div class="film__layer film__slide" data-in=".57,.61,.69,.73" data-kb><img src="img/l-cafe.jpg" alt="Аромадиффузор SILLAGE на стойке кофейни" loading="lazy" decoding="async"><video data-clip="img/clips/l-cafe.mp4" muted loop playsinline preload="none" aria-hidden="true"></video></div>
-      <div class="film__layer film__slide" data-in=".69,.73,.81,.85" data-kb><img src="img/l-clinic.jpg" alt="Аромадиффузор SILLAGE на ресепшн клиники" loading="lazy" decoding="async"><video data-clip="img/clips/l-clinic.mp4" muted loop playsinline preload="none" aria-hidden="true"></video></div>
-      <div class="film__layer film__slide" data-in=".81,.85,.93,.96" data-kb><img src="img/l-boutique.jpg" alt="Аромадиффузор SILLAGE в бутике" loading="lazy" decoding="async"><video data-clip="img/clips/l-boutique.mp4" muted loop playsinline preload="none" aria-hidden="true"></video></div>
+      <div class="film__layer film__slide" data-focus="left" data-in=".42,.47,.57,.61" data-kb><img src="img/l-salon.jpg" alt="Аромадиффузор SILLAGE на ресепшн салона красоты" loading="lazy" decoding="async"><video data-clip="img/clips/l-salon.mp4" muted loop playsinline preload="none" aria-hidden="true"></video></div>
+      <div class="film__layer film__slide" data-focus="right" data-in=".57,.61,.69,.73" data-kb><img src="img/l-cafe.jpg" alt="Аромадиффузор SILLAGE на стойке кофейни" loading="lazy" decoding="async"><video data-clip="img/clips/l-cafe.mp4" muted loop playsinline preload="none" aria-hidden="true"></video></div>
+      <div class="film__layer film__slide" data-focus="left" data-in=".69,.73,.81,.85" data-kb><img src="img/l-clinic.jpg" alt="Аромадиффузор SILLAGE на ресепшн клиники" loading="lazy" decoding="async"><video data-clip="img/clips/l-clinic.mp4" muted loop playsinline preload="none" aria-hidden="true"></video></div>
+      <div class="film__layer film__slide" data-focus="center" data-in=".81,.85,.93,.96" data-kb><img src="img/l-boutique.jpg" alt="Аромадиффузор SILLAGE в бутике" loading="lazy" decoding="async"><video data-clip="img/clips/l-boutique.mp4" muted loop playsinline preload="none" aria-hidden="true"></video></div>
 
       <div class="film__layer film__veil" data-in=".92,.97,2,3" data-max=".94"></div>
 
@@ -596,7 +614,11 @@ button,input{font:inherit;color:inherit}
       var foot = document.querySelector('[data-footer]').getBoundingClientRect();
       var inForm = order.top < window.innerHeight && order.bottom > 0;
       var nearFoot = foot.top < window.innerHeight;
-      var pastHero = reduce ? y > window.innerHeight * .8 : (filmP > .12 && (filmP < .93 || filmP >= 1 && film.getBoundingClientRect().bottom < window.innerHeight * .6));
+      var phone = window.innerWidth < 760;
+      var afterFilm = film && film.getBoundingClientRect().bottom < window.innerHeight * .6;
+      var pastHero = reduce ? y > window.innerHeight * .8
+        : phone ? afterFilm                                   // на телефоне — только после фильма
+        : (filmP > .12 && (filmP < .93 || afterFilm));
       dock.classList.toggle('is-on', pastHero && !inForm && !nearFoot);
     }
   }
